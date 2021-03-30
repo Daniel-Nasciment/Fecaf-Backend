@@ -1,23 +1,31 @@
 const express = require('express');
-const path = require('path');
 const config = require('config');
 
 const port = process.env.PORT || config.get('server.port');
 
-const pedidos = [
-    {cliente: 'Daniel', sabor: 'Pizza de Strogonoff', tamanho: 'Grande', quantidade: '1'},
-    {cliente: 'Daniel', sabor: 'Pizza de Strogonoff', tamanho: 'Grande', quantidade: '1'}
-  ];
+const pedidos = [];
 
 const app = express();
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+
 
 app.set('port', port);
 
-app.route('/pedido').get(
+app.route('/pedidos').get(
     (req, res) => {
         res.status(200).json(pedidos)
     }
 )
+
+app.route('/pedidos/adicionar').post(
+    (req, res) => {
+       pedidos.push(req.body);
+       res.status(200).send("Concluido")
+    }
+)
+
+
 
 app.listen(port, () => {
     console.log("Servidor iniciado na porta " + port)
